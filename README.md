@@ -52,7 +52,7 @@ Labels are saved automatically to `/MODELS/<modelname>.switches` on the SD card 
 
 ### ccalc
 
-A mix script that reads LiPo pack voltage from a FLVSS sensor and outputs a state-of-charge percentage (`CelP`) using a discharge lookup table.
+A mix script that reads LiPo pack voltage from a cells sensor and outputs a state-of-charge percentage (`CelP`) using a discharge lookup table.
 
 **Requires:** Radiomaster ERS-CV01 (or similar) configured as `Cels`.
 
