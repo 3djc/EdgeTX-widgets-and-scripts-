@@ -8,6 +8,8 @@ A collection of Lua widgets for EdgeTX-based radios.
 
 ### SwitchInfo
 
+![SwitchInfo widget](SwitchInfo.bmp)
+
 A widget that lets you annotate each physical switch on your radio with a custom label, so you always know what role each switch plays in your current model.
 
 **Supported radios:** RadioMaster TX15 series, TX16 series.
