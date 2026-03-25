@@ -123,3 +123,35 @@ local myBatPercentName = "BatP"  -- name of the telemetry value to create
 #### Usage
 1. Power on your model and confirm that the `Cels` sensor is showing the correct voltage.
 2. Go to telemetry sensors discovery to discover `CelP` that will contain the percentage remaining in the battery.
+
+---
+
+## Special Function Scripts
+
+### gimbal
+
+A Special Function script that drives the RGB LED ring lights on the radio to reflect gimbal stick positions in real time.
+
+**Supported radios:** TX15, TX16S MK3.
+
+#### Features
+
+- Maps each gimbal stick position to an angle on its corresponding LED ring.
+- Lights up LEDs with a Gaussian spread (±2 LEDs) around the stick direction.
+- Brightness scales with stick magnitude and speed of movement for responsive visual feedback.
+- Skips LED updates when sticks are stationary (dead zone of 3 units) to reduce noise.
+- Supports stick modes 1 and 2.
+
+#### Installation
+
+1. Copy `SCRIPTS/RGBLED/gimbal.lua` to the `SCRIPTS/RGBLED/` directory on your radio's SD card.
+2. In EdgeTX, go to **Model → Special Functions** and add a new function with:
+   - **Trigger:** your preferred activation switch (or `ON` to always run)
+   - **Function:** `Lua`
+   - **Value:** select `gimbal`
+   - **Repeat:** `ON`
+   - **Enable:** `ON`
+
+#### Usage
+
+Activate the assigned Special Function switch. The LED rings will reflect the position of each gimbal stick — the inner ring follows the right stick and the outer ring follows the left stick (or vice versa depending on stick mode).
