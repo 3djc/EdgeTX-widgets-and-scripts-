@@ -128,7 +128,7 @@ local myBatPercentName = "BatP"  -- name of the telemetry value to create
 
 ## Special Function Scripts
 
-### gimbal
+### Gimbal follow
 
 A Special Function script that drives the RGB LED ring lights on the radio to reflect gimbal stick positions in real time.
 
@@ -154,4 +154,4 @@ A Special Function script that drives the RGB LED ring lights on the radio to re
 
 #### Usage
 
-Activate the assigned Special Function switch. The LED rings will reflect the position of each gimbal stick — the inner ring follows the right stick and the outer ring follows the left stick (or vice versa depending on stick mode).
+Activate the assigned Special Function switch. The LED rings will reflect the position of each gimbal stick.
