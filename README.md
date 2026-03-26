@@ -8,7 +8,7 @@ A collection of Lua widgets for EdgeTX-based radios.
 
 ### SwitchInfo
 
-![SwitchInfo widget](SwitchInfo.bmp)
+![SwitchInfo widget](SwitchInfo.png)
 
 A widget that lets you annotate each physical switch on your radio with a custom label, so you always know what role each switch plays in your current model.
 
@@ -45,6 +45,43 @@ A widget that lets you annotate each physical switch on your radio with a custom
 #### Data storage
 
 Labels are saved automatically to `/MODELS/<modelname>.switches` on the SD card whenever a label is edited.
+
+---
+
+## Games
+
+### Pong
+
+A two-player Pong game for EdgeTX colour LCD radios, using the LVGL rendering API.
+
+**Supported radios:** Any EdgeTX radio with a colour LCD.
+
+#### Features
+
+- Two-player local game — each player controls their paddle with a gimbal stick.
+- Ball accelerates slightly on each paddle hit, capped at a maximum speed.
+- Paddle angle influences the ball's deflection angle.
+- First to 7 points wins.
+- Title screen, pause, scored, and game-over states with on-screen overlays.
+- Automatically adapts to stick mode (modes 1–4).
+
+#### Controls
+
+| Action              | Input                        |
+|---------------------|------------------------------|
+| Player 1 paddle     | Left gimbal vertical axis    |
+| Player 2 paddle     | Right gimbal vertical axis   |
+| Start / Pause / Resume | ENTER                     |
+| Quit                | EXIT                         |
+
+#### Installation
+1. Copy `GAMES/pong.lua` to the `GAMES` directory on your radio's SD card.
+2. Access it from the radio's SD navigator.
+
+or
+
+1. Copy `GAMES/pong.lua` to the `SCRIPTS/TOOLS/` directory on your radio's SD card.
+2. Access it from the radio's **Tools** menu.
 
 ---
 
