@@ -52,6 +52,8 @@ Labels are saved automatically to `/MODELS/<modelname>.switches` on the SD card 
 
 ### Pong
 
+![SwitchInfo widget](pong.png)
+
 A two-player Pong game for EdgeTX colour LCD radios, using the LVGL rendering API.
 
 **Supported radios:** Any EdgeTX radio with a colour LCD.
