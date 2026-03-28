@@ -165,6 +165,40 @@ local myBatPercentName = "BatP"  -- name of the telemetry value to create
 
 ---
 
+## Telemetry Scripts
+
+### cells
+
+![cells telemetry script](cells.png)
+
+A telemetry screen script for black-and-white 128×64 displays that shows individual LiPo cell voltages, per-cell percentage bars, total voltage, cell delta, and overall pack state-of-charge.
+
+**Supported radios:** Any EdgeTX radio with a BW 128×64 display.
+
+**Requires:** Radiomaster ERS-CV01 (or similar) configured as `Cels`.
+
+#### Features
+
+- Displays up to 8 cells in a 2-column grid, each showing cell index, voltage, and a percentage bar.
+- Summary row shows total pack voltage (`T:`) and cell delta (`D:`), with the delta displayed inverted as a warning when it exceeds 0.1 V.
+- Overall state-of-charge percentage shown large and centred at the bottom.
+- Chemistry indicator (`LP` / `HV`) shown in the summary row.
+- **[ENTER]** toggles between LiPo (4.20 V max) and LiPo-HV (4.35 V max) discharge curves.
+- Publishes `%bat` as a virtual telemetry sensor.
+
+#### Installation
+
+1. Copy `SCRIPTS/TELEMETRY/cells.lua` to the `SCRIPTS/TELEMETRY/` directory on your radio's SD card.
+2. On the radio, open the telemetry screen list and select **cells** as a telemetry page.
+
+#### Usage
+
+1. Navigate to the telemetry screen on your radio.
+2. Press **[ENTER]** to toggle between LiPo and LiPo-HV chemistry if needed.
+3. Press **[EXIT]** to leave the telemetry page.
+
+---
+
 ## Special Function Scripts
 
 ### Gimbal follow
