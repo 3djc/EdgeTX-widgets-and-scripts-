@@ -228,3 +228,46 @@ A Special Function script that drives the RGB LED ring lights on the radio to re
 #### Usage
 
 Activate the assigned Special Function switch. The LED rings will reflect the position of each gimbal stick.
+
+---
+
+### Gimbal Battery level
+
+A Special Function script that colours the RGB LED rings based on battery percentage, with a smooth green-to-red gradient.
+
+**Supported radios:** TX15, TX16S MK3.
+
+#### Features
+
+- All 20 LEDs reflect battery state of charge at a glance.
+- Smooth colour gradient between the configurable thresholds:
+  - **≥ 90 %** — pure green.
+  - **90 % → 30 %** — gradual transition from green through yellow/orange to red.
+  - **≤ 30 %** — solid red.
+  - **< 20 %** — blinking red.
+- Sensor name and thresholds are configurable at the top of the file.
+
+#### Configuration
+
+Edit the constants at the top of `batt.lua` to match your setup:
+
+```lua
+local SENSOR_NAME      = "%bat"  -- telemetry percent sensor name
+local GREEN_THRESHOLD  = 90      -- >= this → pure green
+local RED_THRESHOLD    = 30      -- <= this → pure red
+local BLINK_THRESHOLD  = 20      -- < this → blinking red
+```
+
+#### Installation
+
+1. Copy `SCRIPTS/RGBLED/batt.lua` to the `SCRIPTS/RGBLED/` directory on your radio's SD card.
+2. In EdgeTX, go to **Model → Special Functions** and add a new function with:
+   - **Trigger:** your preferred activation switch (or `ON` to always run)
+   - **Function:** `Lua`
+   - **Value:** select `batt`
+   - **Repeat:** `ON`
+   - **Enable:** `ON`
+
+#### Usage
+
+Activate the assigned Special Function switch. The LED rings will reflect battery level.

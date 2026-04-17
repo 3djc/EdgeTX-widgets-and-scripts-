@@ -18,113 +18,124 @@
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
 --
-
-local ail, ele, rud, thr
-local prev_ail, prev_ele, prev_rud, prev_thr = 0, 0, 0, 0
-local delta_ail, delta_ele, delta_rud, delta_thr = 0, 0, 0, 0
+local rh, lv, lh, rv
+local lhs, lvs, hs, rvs
+local lv_dir = -1
+local prev_rh, prev_lv, prev_lh, prev_rv = 10000, 10000, 10000, 10000
+local delta_rh, delta_lv, delta_lh, delta_rv
+local angles = { 348, 24, 60, 96, 132, 168, 204, 240, 276, 312 }
 
 -- Configuration constants for delta thresholds
-local DELTA_THRESHOLD_HIGH = 50   -- High delta change threshold
-local DELTA_THRESHOLD_MED = 25    -- Medium delta change threshold
-local DELTA_THRESHOLD_LOW = 10    -- Low delta change threshold
 local DELTA_MIN_MOVEMENT = 3      -- Minimum delta to allow LED updates
 
--- Base LED settings
-local BASE_LED_R, BASE_LED_G, BASE_LED_B = 50, 0, 0
+-- Base LED color when stick centered (uncomment one color option below)
+local BASE_R, BASE_G, BASE_B = 0, 0, 0     -- Off
+
+-- Maximum LED scale when stick at extreme end
+local MAX_R, MAX_G, MAX_B = 0, 0, 1.0   -- Blue
+
+local function getValues()
+  -- Get current values
+  lh = getValue(lhs) or 0
+  rh = (getValue(rhs) or 0) * -1
+  lv = (getValue(lvs) or 0) * lv_dir
+  rv = getValue(rvs) or 0
+end
 
 local function init()
+  -- get stick names based on mode
+  local radioMode = getStickMode()
+  if radioMode < 3 then
+    lhs = "rud"
+    rhs = "ail"
+  else
+    lhs = "ail"
+    rhs = "rud"
+  end
+  if radioMode == 1 or radioMode == 3 then
+    lvs = "ele"
+    rvs = "thr"
+  else
+    lvs = "thr"
+    rvs = "ele"
+  end
+  -- invert left vertical for TX16S Mk3
+  if LCD_W == 800 then lv_dir = 1 end
   -- Initialize all values to current stick positions
-  ail = getValue("ail") or 0
-  thr = getValue("thr") or 0
-  rud = getValue("rud") or 0
-  ele = getValue("ele") or 0  
+  getValues()
 end
 
 local function calculateDeltas()
   -- Calculate delta values for all controls
-  delta_ail = math.abs(ail - prev_ail)
-  delta_thr = math.abs(thr - prev_thr)
-  delta_rud = math.abs(rud - prev_rud)
-  delta_ele = math.abs(ele - prev_ele)
+  delta_rh = math.abs(rh - prev_rh)
+  delta_rv = math.abs(rv - prev_rv)
+  delta_lh = math.abs(lh - prev_lh)
+  delta_lv = math.abs(lv - prev_lv)
 end
 
-local function shouldUpdateLeds()
+local function shouldUpdate(dh, dv)
   -- Check if any control has moved enough to warrant LED updates
-  local max_delta = math.max(delta_ail, delta_thr, delta_rud, delta_ele)
-  return max_delta >= DELTA_MIN_MOVEMENT
+  return math.max(dh, dv) >= DELTA_MIN_MOVEMENT
 end
 
 local function setLed(ring, h, v)
   local magnitude = math.sqrt(h^2 + v^2)
-  if magnitude < 0.1 then return end
-  
+
   local angle = math.atan2(v, h)
   angle = (math.deg(angle) + 360) % 360
   local center_index = math.floor(angle / 36 + 0.5) % 10
-  center_index = center_index + ring * 10
-  
-  -- Scale intensity based on delta values for more responsive feedback
-  local delta_factor = 1.0
-  if ring == 0 then
-    delta_factor = 1.0 + (delta_ail + delta_thr) / 200
-  else
-    delta_factor = 1.0 + (delta_rud + delta_ele) / 200
-  end
-  
-  local base_intensity = 250 * magnitude * math.min(delta_factor, 2.0)
-  base_intensity = math.min(255, base_intensity)
-  
-  local spread = 2
-  for offset = -spread, spread do
-    local index = (center_index + offset) % 10 + ring * 10
-    local distance = math.abs(offset)
-    local factor = math.exp(-0.5 * (distance ^ 2))
-    local intensity = math.floor(base_intensity * factor)
-    setRGBLedColor(index, intensity, intensity, intensity)
+
+  local base_intensity = math.min(255, 250 * magnitude)
+
+  ring = ring * 10 - 1
+
+  for i = 1, 10 do
+    local da = math.abs((angle - angles[i] + 180) % 360 - 180)
+    local distance = da / 36
+    if distance < 1.5 and magnitude >= 0.1 then
+      local factor = math.exp(-0.5 * (distance ^ 2))
+      local intensity = math.floor(base_intensity * factor)
+      setRGBLedColor(i+ring, MAX_R*intensity, MAX_G*intensity, MAX_B*intensity)
+    else
+      setRGBLedColor(i+ring, BASE_R, BASE_G, BASE_B)
+    end
   end
 end
 
 local function run()
-  -- this scripts is hardcoded for tx15/tx16mk3 ring lights
-  local ver, radio, maj, minor, rev, osname = getVersion()
-  if not (string.find(radio, "x15") or string.find(radio, "x16")) then
-    return
-  end
-
   -- Get current values
-  ail = getValue("ail")
-  thr = getValue("thr")
-  rud = getValue("rud")
-  ele = getValue("ele")
-  
+  getValues()
+
   -- Calculate deltas
   calculateDeltas()
-  
+
+  local update = false
+
   -- Only update LEDs if there's significant movement
-  if not shouldUpdateLeds() then
-    -- Skip LED updates for very small movements
-    return
-  end
-  
-  -- Set base LED color (will be overridden by delta actions if triggered)
-  for i = 0, LED_STRIP_LENGTH - 1 do
-    setRGBLedColor(i, BASE_LED_R, BASE_LED_G, BASE_LED_B)
+  if shouldUpdate(delta_rh, delta_rv) then
+    -- Apply LED patterns (enhanced with delta feedback)
+    setLed(0, rh/1024, rv/1024)
+
+    update = true
+
+    -- Store previous values
+    prev_rh, prev_rv = rh or 0, rv or 0
   end
 
-  -- Apply normal LED patterns (enhanced with delta feedback)
-  local radioMode = getStickMode()
-  if radioMode == 1 then
-    setLed(0, -ail/1024, thr/1024)
-    setLed(1, rud/1024, -ele/1024)
-  elseif radioMode == 2 then
-    setLed(0, -ail/1024, ele/1024)
-    setLed(1, rud/1024, -thr/1024)
+  -- Only update LEDs if there's significant movement
+  if shouldUpdate(delta_lh, delta_lv) then
+    -- Apply LED patterns (enhanced with delta feedback)
+    setLed(1, lh/1024, lv/1024)
+
+    update = true
+
+    -- Store previous values
+    prev_lv, prev_lh = lv or 0, lh or 0
   end
-  
-  applyRGBLedColors()
-  
-  -- Store previous values
-  prev_ail, prev_ele, prev_rud, prev_thr = ail or 0, ele or 0, rud or 0, thr or 0
+
+  if update then
+    applyRGBLedColors()
+  end
 end
 
 local function background()
