@@ -263,7 +263,7 @@ local BLINK_THRESHOLD  = 20      -- < this → blinking red
 1. Copy `SCRIPTS/RGBLED/batt.lua` to the `SCRIPTS/RGBLED/` directory on your radio's SD card.
 2. In EdgeTX, go to **Model → Special Functions** and add a new function with:
    - **Trigger:** your preferred activation switch (or `ON` to always run)
-   - **Function:** `Lua`
+   - **Function:** `RGB leds`
    - **Value:** select `batt`
    - **Repeat:** `ON`
    - **Enable:** `ON`

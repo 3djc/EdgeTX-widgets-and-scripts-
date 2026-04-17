@@ -16,7 +16,8 @@
 ---- #########################################################################
 -- LUA Mix Script
 
-local outputs = { "CelP" }
+-- input below the name of the percentage sensor you want created
+local myBatPercentName = "%bat"
 
 -- cellmin starts high / cellmax starts low so any real reading beats them
 local cellminima = {4.2, 4.2, 4.2, 4.2, 4.2, 4.2}
@@ -88,7 +89,7 @@ local function run()
     cellsumtype = math.ceil(cellResult / 4.25)
     cellsumpercent = percentcell(cellResult / cellsumtype)
   end
-  setTelemetryValue(0x0310, 0, 1, cellsumpercent, 13, 0, "CelP")
+  setTelemetryValue(0x0310, 0, 1, cellsumpercent, 13, 0, myBatPercentName)
   return cellsumpercent * 10.24  -- maps 0-100% to 0-1024 (EdgeTX mix range)
 end
 

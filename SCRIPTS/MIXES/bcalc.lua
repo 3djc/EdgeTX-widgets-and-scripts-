@@ -3,9 +3,7 @@
 local myBatSensorName = "RxBt"
 
 -- input below the name of the percentage sensor you want created
-local myBatPercentName = "BatP"
-
-local outputs = { "BatP" }
+local myBatPercentName = "%bat"
 
 -- No changes needed below
 -- Percentage table extracted from Robbe lipo tester. Only suitable for LIPO type batteries
