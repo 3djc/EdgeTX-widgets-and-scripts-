@@ -220,7 +220,7 @@ A Special Function script that drives the RGB LED ring lights on the radio to re
 1. Copy `SCRIPTS/RGBLED/gimbal.lua` to the `SCRIPTS/RGBLED/` directory on your radio's SD card.
 2. In EdgeTX, go to **Model → Special Functions** and add a new function with:
    - **Trigger:** your preferred activation switch (or `ON` to always run)
-   - **Function:** `Lua`
+   - **Function:** `RGB leds`
    - **Value:** select `gimbal`
    - **Repeat:** `ON`
    - **Enable:** `ON`
