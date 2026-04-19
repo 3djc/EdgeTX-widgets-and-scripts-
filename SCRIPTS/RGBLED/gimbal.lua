@@ -34,11 +34,15 @@ local BASE_R, BASE_G, BASE_B = 0, 0, 0     -- Off
 -- Maximum LED scale when stick at extreme end
 local MAX_R, MAX_G, MAX_B = 0, 0, 1.0   -- Blue
 
+-- True once LEDs have been cleared after entering background mode,
+-- so we stop pushing updates every background tick.
+local ledsCleared = false
+
 local function getValues()
   -- Get current values
   lh = getValue(lhs) or 0
   rh = (getValue(rhs) or 0) * -1
-  lv = (getValue(lvs) or 0) * lv_dir
+  lv = (getValue(lvs) or 0) * -1
   rv = getValue(rvs) or 0
 end
 
@@ -59,8 +63,6 @@ local function init()
     lvs = "thr"
     rvs = "ele"
   end
-  -- invert left vertical for TX16S Mk3
-  if LCD_W == 800 then lv_dir = 1 end
   -- Initialize all values to current stick positions
   getValues()
 end
@@ -103,6 +105,8 @@ local function setLed(ring, h, v)
 end
 
 local function run()
+  ledsCleared = false
+
   -- Get current values
   getValues()
 
@@ -139,7 +143,15 @@ local function run()
 end
 
 local function background()
-  -- Called periodically while the Special Function switch is off
+  -- Called periodically while the Special Function switch is off.
+  -- Clear the LEDs once on entry, then leave them alone.
+  if not ledsCleared then
+    for i = 0, 19 do
+      setRGBLedColor(i, 0, 0, 0)
+    end
+    applyRGBLedColors()
+    ledsCleared = true
+  end
 end
 
 return { run=run, background=background, init=init }

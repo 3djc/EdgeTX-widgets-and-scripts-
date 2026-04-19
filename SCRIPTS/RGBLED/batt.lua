@@ -32,6 +32,10 @@ local BLINK_INTERVAL = 5
 local blinkCounter = 0
 local blinkOn = true
 
+-- True once LEDs have been cleared after entering background mode,
+-- so we stop pushing updates every background tick.
+local ledsCleared = false
+
 local function setAllLeds(r, g, b)
   for i = 0, 19 do
     setRGBLedColor(i, r, g, b)
@@ -42,6 +46,7 @@ local function init()
 end
 
 local function run()
+  ledsCleared = false
   local bat = getValue(SENSOR_NAME)
 
   if bat == nil then
@@ -81,7 +86,13 @@ local function run()
 end
 
 local function background()
-  -- Called periodically while the Special Function switch is off
+  -- Called periodically while the Special Function switch is off.
+  -- Clear the LEDs once on entry, then leave them alone.
+  if not ledsCleared then
+    setAllLeds(0, 0, 0)
+    applyRGBLedColors()
+    ledsCleared = true
+  end
 end
 
 return { run=run, background=background, init=init }
