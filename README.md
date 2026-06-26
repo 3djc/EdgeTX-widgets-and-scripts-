@@ -199,6 +199,80 @@ A telemetry screen script for black-and-white 128×64 displays that shows indivi
 
 ---
 
+## Tool Scripts
+
+### Graupner HoTT
+
+A Tools-menu script that opens the **Graupner HoTT receiver text menu** directly on the radio, letting you configure the RX and any attached HoTT sensors (Vario, GPS, ESC, GAM, EAM, …) without a separate Smart Box. The original script has been fixed by 3djc to work with recent radios and EdgeTX versions, and the display now scales to fill both colour (480×272, 480×320, 800×480, …) and monochrome (128×64, 212×64) screens.
+
+**Supported radios:** Any EdgeTX radio running the Multi protocol with a Graupner HoTT receiver bound.
+
+**Requires:** HoTT telemetry available (Multi module in HoTT mode).
+
+#### Features
+
+- Renders the RX's native 21×8 character menu grid, including the cursor highlight.
+- Navigate the receiver menu with the radio's keys (see Controls below).
+- **MENU** cycles through the detected sensors (RX, Vario, GPS, Cust, ESC, GAM, EAM) — only sensors that are actually present are offered.
+- Adapts automatically to colour and monochrome displays.
+- Shows a "No HoTT telemetry…" notice when no data is received.
+
+#### Controls
+
+| Action                 | Input            |
+|------------------------|------------------|
+| Enter / select         | ENTER            |
+| Next / previous item   | NEXT / PREV      |
+| Next / previous page   | PAGE+ / PAGE−    |
+| Cycle through sensors  | MENU             |
+| Exit                   | EXIT             |
+
+#### Installation
+
+1. Copy `SCRIPTS/TOOLS/Graupner HoTT.lua` to the `SCRIPTS/TOOLS/` directory on your radio's SD card.
+2. On the radio, open the **Tools** menu and run **Graupner HoTT**.
+
+#### Usage
+
+1. Bind your HoTT receiver and confirm HoTT telemetry is being received.
+2. Run the script from the **Tools** menu; the receiver menu appears on screen.
+3. Use the keys above to navigate and edit the RX/sensor settings, then press **EXIT** to leave (the script releases the buffer so normal telemetry resumes).
+
+---
+
+### Graupner HoTT Model Locator
+
+A Tools-menu script that helps you find a lost or crashed model using its HoTT **RSSI**. It produces a variometer-style audio cue (the beeps get faster and higher-pitched as the signal grows stronger) together with a colourised on-screen bar. Based on the Model Locator by Offer Shmuely / Scott Bauer, adapted for Graupner HoTT (RSSI scaled −115 dB…−15 dB → 0…100%) and updated by 3djc to scale across colour resolutions.
+
+**Supported radios:** Any EdgeTX radio with a colour LCD.
+
+**Requires:** HoTT telemetry with an `Rssi` sensor.
+
+#### Features
+
+- Audio feedback whose pitch/frequency tracks the RSSI strength.
+- Large numeric RSSI readout (dB) plus a colourised bar graph (green = strong, red = weak).
+- Layout scales from the original 480×272 design to any colour resolution.
+- Shows "no telemetry" when the link is lost.
+
+#### How to use it
+
+- **Simple way:** walk toward the crash site — the beeps speed up and rise in pitch as you get closer, until you can spot the model.
+- **Accurate (triangulation) way:** point the antenna straight away from you and find the *weakest* signal (lowest RSSI) — that bearing points at the model. Move to the side, find the weakest signal again, and triangulate the two bearings.
+
+#### Installation
+
+1. Copy `SCRIPTS/TOOLS/Graupner HoTT Model Locator.lua` to the `SCRIPTS/TOOLS/` directory on your radio's SD card.
+2. Place `Model Locator (by RSSI).png` and `Model Locator (by RSSI).wav` (from the original Model Locator distribution) in the same `SCRIPTS/TOOLS/` directory — the script loads them at runtime for the image and audio cue.
+3. On the radio, open the **Tools** menu and run **Graupner HoTT model locator**.
+
+#### Usage
+
+1. After a crash or fly-away, run the script from the **Tools** menu.
+2. Follow the audio and bar feedback toward the model, or use the triangulation method above for a more precise bearing.
+
+---
+
 ## Special Function Scripts
 
 ### Gimbal follow
