@@ -29,6 +29,15 @@ if (string.sub(radio, 1, 4) == "tx15") then
         { "SW1", "SW2", "SW3" },
         { "SW4", "SW5", "SW6" },
     }
+elseif (string.sub(radio, 1, 4) == "gx15") then
+    rows = {
+        { "LS", "S1", "S2", "RS" },
+        { "SA", "SB", "SC", "SD" },
+        { "SE", "SF", "SG" },
+        { "SH", "SI", "SJ" },
+        { "SW1", "SW2", "SW3" },
+        { "SW4", "SW5", "SW6" },
+    }
 elseif (string.sub(radio, 1, 4) == "tx16") then
     rows = {
         { "SE", "SF", "SH", "SG" },

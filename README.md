@@ -12,7 +12,7 @@ A collection of Lua widgets for EdgeTX-based radios.
 
 A widget that lets you annotate each physical switch on your radio with a custom label, so you always know what role each switch plays in your current model.
 
-**Supported radios:** RadioMaster TX15 series, TX16 series.
+**Supported radios:** RadioMaster TX15 series, TX16 series, GX15.
 
 #### Features
 
@@ -28,6 +28,7 @@ A widget that lets you annotate each physical switch on your radio with a custom
 |-------|-------------------------------------------------------------------------|
 | TX15  | SE S1 S2 SF / SA SB SC SD / SW1 SW2 SW3 / SW4 SW5 SW6                  |
 | TX16  | SE SF SH SG / SA SB SC SD / LS S1 S2 RS / SW1 SW2 SW3 / SW4 SW5 SW6   |
+| GX15  | LS S1 S2 RS / SA SB SC SD / SE SF SG / SH SI SJ / SW1 SW2 SW3 / SW4 SW5 SW6 |
 
 #### Installation
 
