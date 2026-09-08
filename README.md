@@ -49,6 +49,42 @@ Labels are saved automatically to `/MODELS/<modelname>.switches` on the SD card 
 
 ---
 
+### AnalogClock
+
+A round analog clock that fills the whole widget zone, drawn with the LVGL API.
+
+**Supported radios:** Any EdgeTX colour LCD radio with EdgeTX 2.11 or later.
+
+#### Features
+
+- The dial scales to whatever zone it is dropped in, from a small telemetry cell up to fullscreen.
+- Hour and minute hands, plus an optional second hand in a colour of your choice.
+- Hour ticks always, minute ticks once the dial is large enough to keep them legible.
+- Hour numerals that adapt to the available room: all twelve on a large dial, 12/3/6/9 on a
+  tighter one, and none at all when the dial is too small to carry them in proportion.
+- Dial and hands use the active theme colours, so the clock matches the rest of your screen.
+- Time comes from the radio's RTC, so it needs no telemetry or GPS.
+
+#### Options
+
+| Option     | Type   | Default | Meaning                                 |
+|------------|--------|---------|-----------------------------------------|
+| `Seconds`  | bool   | on      | Show the second hand                    |
+| `Numerals` | bool   | on      | Show the hour numerals                  |
+| `Accent`   | colour | red     | Colour of the second hand and centre hub |
+
+#### Installation
+
+1. Copy the `Widgets/AnalogClock/` folder to the `WIDGETS/` directory on your radio's SD card.
+2. On the radio, add the **Analog Clock** widget to any zone.
+
+#### Usage
+
+Nothing to set up — the clock starts running as soon as it is placed. Open it fullscreen for a
+large bedside-style dial.
+
+---
+
 ## Games
 
 ### Pong
