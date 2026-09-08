@@ -51,6 +51,8 @@ Labels are saved automatically to `/MODELS/<modelname>.switches` on the SD card 
 
 ### AnalogClock
 
+![AnalogClock widget](AnalogClock.png)
+
 A round analog clock that fills the whole widget zone, drawn with the LVGL API.
 
 **Supported radios:** Any EdgeTX colour LCD radio with EdgeTX 2.11 or later.
