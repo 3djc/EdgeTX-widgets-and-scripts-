@@ -34,6 +34,21 @@ local BASE_R, BASE_G, BASE_B = 0, 0, 0     -- Off
 -- Maximum LED scale when stick at extreme end
 local MAX_R, MAX_G, MAX_B = 0, 0, 1.0   -- Blue
 
+-- Ambient light sensor (TX16S MK3 only, source "light").
+-- getValue("light") returns the raw sensor reading minus 1024, so the value
+-- shown in Radio setup > Hardware > Analogs is 1024 higher than what we read
+-- here. Point the radio at a dark room and at daylight, note both readings,
+-- and put them below. If the response feels inverted, simply swap the two.
+local LIGHT_DARK   = -1024   -- reading in the dark  -> DIM_MIN
+local LIGHT_BRIGHT = 0       -- reading in daylight  -> DIM_MAX
+local DIM_MIN = 0.15         -- LED scale when dark (never fully off)
+local DIM_MAX = 1.0          -- LED scale in full light
+local DIM_STEP = 0.05        -- brightness change that forces a LED refresh
+
+local hasLightSensor = false
+local brightness = DIM_MAX
+local prev_brightness = -1
+
 -- True once LEDs have been cleared after entering background mode,
 -- so we stop pushing updates every background tick.
 local ledsCleared = false
@@ -63,8 +78,24 @@ local function init()
     lvs = "thr"
     rvs = "ele"
   end
+  -- Ambient light sensor is only present on some radios (TX16S MK3)
+  hasLightSensor = (getFieldInfo("light") ~= nil)
+
   -- Initialize all values to current stick positions
   getValues()
+end
+
+local function updateBrightness()
+  -- Scale the LED output with the ambient light, so the ring stays readable
+  -- in the sun without blinding at night. The firmware already low-pass
+  -- filters the sensor, no extra smoothing needed here.
+  if not hasLightSensor then return end
+
+  local lux = getValue("light") or LIGHT_DARK
+  local t = (lux - LIGHT_DARK) / (LIGHT_BRIGHT - LIGHT_DARK)
+  if t < 0 then t = 0 elseif t > 1 then t = 1 end
+
+  brightness = DIM_MIN + (DIM_MAX - DIM_MIN) * t
 end
 
 local function calculateDeltas()
@@ -87,7 +118,7 @@ local function setLed(ring, h, v)
   angle = (math.deg(angle) + 360) % 360
   local center_index = math.floor(angle / 36 + 0.5) % 10
 
-  local base_intensity = math.min(255, 250 * magnitude)
+  local base_intensity = math.min(255, 250 * magnitude) * brightness
 
   ring = ring * 10 - 1
 
@@ -113,10 +144,15 @@ local function run()
   -- Calculate deltas
   calculateDeltas()
 
+  -- Follow the ambient light, and force a refresh when it moved enough,
+  -- otherwise a still stick would keep its old brightness forever
+  updateBrightness()
+  local relight = math.abs(brightness - prev_brightness) >= DIM_STEP
+
   local update = false
 
   -- Only update LEDs if there's significant movement
-  if shouldUpdate(delta_rh, delta_rv) then
+  if relight or shouldUpdate(delta_rh, delta_rv) then
     -- Apply LED patterns (enhanced with delta feedback)
     setLed(0, rh/1024, rv/1024)
 
@@ -127,7 +163,7 @@ local function run()
   end
 
   -- Only update LEDs if there's significant movement
-  if shouldUpdate(delta_lh, delta_lv) then
+  if relight or shouldUpdate(delta_lh, delta_lv) then
     -- Apply LED patterns (enhanced with delta feedback)
     setLed(1, lh/1024, lv/1024)
 
@@ -139,6 +175,7 @@ local function run()
 
   if update then
     applyRGBLedColors()
+    prev_brightness = brightness
   end
 end
 

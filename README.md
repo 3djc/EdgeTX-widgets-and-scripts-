@@ -327,6 +327,12 @@ A Special Function script that drives the RGB LED ring lights on the radio to re
 - Brightness scales with stick magnitude and speed of movement for responsive visual feedback.
 - Skips LED updates when sticks are stationary (dead zone of 3 units) to reduce noise.
 - Supports stick modes 1 and 2.
+- On the TX16S MK3, dims the ring with the ambient light sensor, so it stays
+  readable outdoors without blinding at night. The sensor is detected at
+  startup; on radios without one the ring runs at full brightness. Calibrate
+  `LIGHT_DARK` / `LIGHT_BRIGHT` at the top of the script with the readings from
+  **Radio → Hardware → Analogs** minus 1024 (swap them if the response is
+  inverted), and set the night floor with `DIM_MIN`.
 
 #### Installation
 
