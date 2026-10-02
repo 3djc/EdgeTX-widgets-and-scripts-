@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check Lua syntax
-        uses: EdgeTX/edgetx-luac-action@v1
+        uses: EdgeTX/edgetx-luac-action@v1.0.0
         with:
           files: |
             SCRIPTS/**/*.lua
@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Compile to bytecode
-        uses: EdgeTX/edgetx-luac-action@v1
+        uses: EdgeTX/edgetx-luac-action@v1.0.0
         with:
           files: |
             SCRIPTS/**/*.lua
