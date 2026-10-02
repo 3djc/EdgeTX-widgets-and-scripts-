@@ -330,7 +330,7 @@ A Tools-menu script that helps you find a lost or crashed model using its HoTT *
 
 A Special Function script that drives the RGB LED ring lights on the radio to reflect gimbal stick positions in real time.
 
-**Supported radios:** TX15, TX16S MK3.
+**Supported radios:** TX15, TX16S MK3, GX15.
 
 #### Features
 
@@ -366,7 +366,7 @@ Activate the assigned Special Function switch. The LED rings will reflect the po
 
 A Special Function script that colours the RGB LED rings based on battery percentage, with a smooth green-to-red gradient.
 
-**Supported radios:** TX15, TX16S MK3.
+**Supported radios:** TX15, TX16S MK3, GX15.
 
 #### Features
 
