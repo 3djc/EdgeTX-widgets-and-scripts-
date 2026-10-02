@@ -4,6 +4,18 @@ A collection of Lua widgets for EdgeTX-based radios.
 
 ---
 
+## Installing from a release
+
+Each [release](../../releases/latest) contains `edgetx-scripts.zip`, with every script precompiled to bytecode (`.luac`) alongside its `.lua` source.
+
+1. Download `edgetx-scripts.zip` from the [latest release](../../releases/latest).
+2. Unzip it and copy the `SCRIPTS/`, `Widgets/` and `GAMES/` folders to the root of your radio's SD card, merging with the existing folders. Only copy the ones you need if you don't want everything.
+3. Follow the **Installation** steps of the individual script or widget below to enable it.
+
+> **Note:** the precompiled `.luac` files require **EdgeTX 2.11 or later**. On older firmware, copy the `.lua` files from the repository instead. Precompiled scripts load faster and avoid "not enough memory" errors on radios with little RAM.
+
+---
+
 ## Widgets
 
 ### SwitchInfo
