@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Lua syntax
+        uses: EdgeTX/edgetx-luac-action@v1
+        with:
+          files: |
+            SCRIPTS/**/*.lua
+            Widgets/**/*.lua
+            GAMES/**/*.lua
+          check-only: true
+
+  package:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile to bytecode
+        uses: EdgeTX/edgetx-luac-action@v1
+        with:
+          files: |
+            SCRIPTS/**/*.lua
+            Widgets/**/*.lua
+            GAMES/**/*.lua
+      - name: Package
+        run: zip -r edgetx-scripts.zip SCRIPTS Widgets GAMES -x '*.DS_Store'
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: edgetx-scripts.zip
